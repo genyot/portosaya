@@ -1,6 +1,11 @@
 {
   "version": 2,
   "buildCommand": "npm ci && npm run build",
-  "framework": "node",
-  "public": "public"
+  "public": "public",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/server.js"
+    }
+  ]
 }

@@ -4,8 +4,7 @@
     "scripts": {
         "build": "vite build",
         "dev": "vite",
-        "prod": "vite build --mode production",
-        "start": "node server.js"
+        "prod": "vite build --mode production"
     },
     "devDependencies": {
         "@tailwindcss/forms": "^0.5.2",

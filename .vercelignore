@@ -8,3 +8,4 @@ storage/framework/cache/*
 storage/framework/sessions/*
 .phpunit.result.cache
 tests
+# Force rebuild

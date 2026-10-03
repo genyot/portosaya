@@ -1,20 +1,6 @@
 {
   "version": 2,
   "buildCommand": "npm ci && npm run build",
-  "functions": {
-    "api/bootstrap.php": {
-      "runtime": "vercel-php@0.7.3"
-    }
-  },
-  "routes": [
-    {
-      "src": "/build/(.*)",
-      "dest": "/public/build/$1"
-    },
-    {
-      "src": "/(.*)",
-      "dest": "/api/bootstrap.php"
-    }
-  ],
-  "outputDirectory": "public"
+  "framework": "node",
+  "public": "public"
 }

@@ -1,0 +1,207 @@
+<x-app-layout>
+
+    <x-admin-index-style />
+
+    {{-- HEADER --}}
+    <div class="crud-header">
+        <div>
+            <h1 class="crud-title">Kelola Pengalaman</h1>
+            <p class="crud-subtitle">
+                Tambah, edit, atau hapus pengalaman kerja portfolio.
+            </p>
+        </div>
+
+        <a href="{{ route('experiences.create') }}" class="crud-add-btn">
+            <i class="bi bi-plus-lg"></i>
+            <span>Tambah Pengalaman</span>
+        </a>
+    </div>
+
+
+    {{-- FLASH MESSAGE --}}
+    @if (session('success'))
+        <div class="crud-alert success-alert">
+            <i class="bi bi-check-circle-fill"></i>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+
+    {{-- FILTER --}}
+    <form method="GET" action="{{ route('experiences.index') }}" class="filter-bar">
+        <div class="filter-search">
+            <i class="bi bi-search"></i>
+            <input
+                type="text"
+                name="search"
+                value="{{ request('search') }}"
+                placeholder="Cari posisi atau perusahaan..."
+                autocomplete="off"
+            >
+        </div>
+
+        <button type="submit" class="filter-submit">
+            <i class="bi bi-funnel"></i>
+            <span>Terapkan</span>
+        </button>
+
+        @if(request()->filled('search'))
+            <a href="{{ route('experiences.index') }}" class="filter-reset">
+                <i class="bi bi-x-lg"></i>
+                <span>Reset</span>
+            </a>
+        @endif
+    </form>
+
+
+    {{-- CARD --}}
+    <div class="crud-card">
+
+        <div class="crud-card-header">
+            <div>
+                <h2 class="crud-card-title">
+                    <i class="bi bi-briefcase"></i>
+                    Daftar Pengalaman
+                </h2>
+                <p class="crud-card-subtitle">
+                    Riwayat pekerjaan yang ditampilkan di portfolio.
+                </p>
+            </div>
+
+            <div class="crud-count">
+                {{ $experiences->total() }} Pengalaman
+            </div>
+        </div>
+
+
+        <div class="table-responsive">
+            <table class="crud-table">
+                <thead>
+                    <tr>
+                        <th width="70">No</th>
+                        <th>Posisi</th>
+                        <th>Perusahaan</th>
+                        <th width="160">Periode</th>
+                        <th width="80">Urutan</th>
+                        <th width="120" class="text-end">Aksi</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @forelse ($experiences as $index => $experience)
+                        <tr>
+                            <td class="cell-number" data-label="No">
+                                <span class="crud-number">
+                                    {{ $experiences->firstItem() + $index }}
+                                </span>
+                            </td>
+
+                            <td data-label="Posisi">
+                                <strong>{{ $experience->position }}</strong>
+                                @if($experience->description)
+                                    <div class="crud-muted">
+                                        {{ \Illuminate\Support\Str::limit($experience->description, 50) }}
+                                    </div>
+                                @endif
+                            </td>
+
+                            <td data-label="Perusahaan">
+                                <span class="crud-muted">{{ $experience->company }}</span>
+                            </td>
+
+                            <td data-label="Periode">
+                                <span class="period-badge">
+                                    <i class="bi bi-calendar3"></i>
+                                    {{ $experience->period }}
+                                </span>
+                            </td>
+
+                            <td data-label="Urutan">
+                                <span class="crud-muted">{{ $experience->order }}</span>
+                            </td>
+
+                            <td class="cell-action" data-label="Aksi">
+                                <div class="action-buttons">
+                                    <a
+                                        href="{{ route('experiences.edit', $experience->id) }}"
+                                        class="action-btn edit-btn"
+                                        title="Edit Pengalaman"
+                                    >
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+
+                                    <button
+                                        type="button"
+                                        class="action-btn delete-btn"
+                                        title="Hapus Pengalaman"
+                                        onclick="openDeleteModal(
+                                            '{{ $experience->id }}',
+                                            @js($experience->position)
+                                        )"
+                                    >
+                                        <i class="bi bi-trash3"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    @empty
+                        <tr class="row-empty">
+                            <td colspan="6" class="cell-empty">
+                                <div class="crud-empty">
+                                    <div class="crud-empty-icon">
+                                        <i class="bi bi-briefcase"></i>
+                                    </div>
+                                    <h4>Belum Ada Pengalaman</h4>
+                                    <p>Belum ada pengalaman yang ditambahkan.</p>
+                                    <a href="{{ route('experiences.create') }}" class="crud-add-btn">
+                                        <i class="bi bi-plus-lg"></i>
+                                        Tambah Pengalaman
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+
+
+        @if($experiences->hasPages())
+            <div class="pagination-wrapper">
+                {{ $experiences->links() }}
+            </div>
+        @endif
+
+    </div>
+
+
+    {{-- MODAL HAPUS --}}
+    <x-delete-modal
+        title="Hapus Pengalaman?"
+        label="pengalaman"
+        url-prefix="/experiences"
+    />
+
+
+    <style>
+        .period-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+
+            padding: 5px 10px;
+
+            background: rgba(77,156,255,.1);
+            color: #6badff;
+
+            border: 1px solid rgba(77,156,255,.18);
+            border-radius: 20px;
+
+            font-size: 10px;
+            font-weight: 600;
+
+            white-space: nowrap;
+        }
+    </style>
+
+</x-app-layout>

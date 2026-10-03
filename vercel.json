@@ -1,10 +1,11 @@
 {
   "version": 2,
-  "buildCommand": "composer install --no-interaction --prefer-dist --optimize-autoloader && npm install && npm run build",
+  "buildCommand": "npm install && npm run build",
   "functions": {
     "api/bootstrap.php": {
       "runtime": "vercel-php@0.7.3",
-      "maxDuration": 30
+      "maxDuration": 30,
+      "memory": 1024
     }
   },
   "routes": [
@@ -13,12 +14,17 @@
       "dest": "/public/build/$1"
     },
     {
+      "src": "/storage/(.*)",
+      "dest": "/public/storage/$1"
+    },
+    {
       "src": "/(.*)",
       "dest": "/api/bootstrap.php"
     }
   ],
   "env": {
     "APP_ENV": "production",
-    "LOG_CHANNEL": "stderr"
+    "LOG_CHANNEL": "stderr",
+    "VERCEL": "true"
   }
 }

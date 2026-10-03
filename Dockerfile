@@ -2,36 +2,31 @@ FROM php:8.3-apache
 
 WORKDIR /app
 
-# Install dependencies
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     curl \
     git \
     unzip \
+    nodejs \
+    npm \
     && rm -rf /var/lib/apt/lists/*
 
-# Install Node.js
-RUN curl -fsSL https://deb.nodesource.com/setup_20.x | bash - \
-    && apt-get install -y nodejs
-
 # Install Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Copy files
+# Copy project files
 COPY . .
 
-# Install PHP dependencies
+# Install PHP & Node dependencies
 RUN composer install --no-interaction --prefer-dist --optimize-autoloader
-
-# Install Node dependencies & build
 RUN npm ci && npm run build
 
 # Setup Apache
 RUN a2enmod rewrite
 RUN sed -i 's|/var/www/html|/app/public|g' /etc/apache2/sites-available/000-default.conf
 
-# Set permissions
+# Permissions
 RUN chown -R www-data:www-data /app/storage /app/bootstrap/cache
 
 EXPOSE 80
-
 CMD ["apache2-foreground"]

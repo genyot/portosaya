@@ -1,8 +1,11 @@
 {
   "version": 2,
+  "buildCommand": "composer install --no-interaction --prefer-dist --optimize-autoloader && npm install && npm run build",
+  "framework": "laravel",
   "functions": {
-    "api/index.php": {
-      "runtime": "vercel-php@0.7.3"
+    "api/bootstrap.php": {
+      "runtime": "vercel-php@0.7.3",
+      "maxDuration": 30
     }
   },
   "routes": [
@@ -12,7 +15,11 @@
     },
     {
       "src": "/(.*)",
-      "dest": "/api/index.php"
+      "dest": "/api/bootstrap.php"
     }
-  ]
+  ],
+  "env": {
+    "APP_ENV": "production",
+    "LOG_CHANNEL": "stderr"
+  }
 }

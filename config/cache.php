@@ -15,7 +15,7 @@ return [
     |
     */
 
-    'default' => env('CACHE_STORE', 'database'),
+    'default' => env('CACHE_STORE', env('VERCEL') ? 'array' : 'database'),
 
     /*
     |--------------------------------------------------------------------------
@@ -48,8 +48,8 @@ return [
 
         'file' => [
             'driver' => 'file',
-            'path' => storage_path('framework/cache/data'),
-            'lock_path' => storage_path('framework/cache/data'),
+            'path' => env('VERCEL') ? '/tmp/laravel/cache' : storage_path('framework/cache/data'),
+            'lock_path' => env('VERCEL') ? '/tmp/laravel/cache' : storage_path('framework/cache/data'),
         ],
 
         'memcached' => [

@@ -1,12 +1,10 @@
 {
   "version": 2,
-  "buildCommand": "npm install && npm run build",
-  "outputDirectory": "public",
+  "buildCommand": "npm ci && npm run build",
   "functions": {
     "api/bootstrap.php": {
       "runtime": "vercel-php@0.7.3",
-      "maxDuration": 30,
-      "memory": 1024
+      "maxDuration": 30
     }
   },
   "routes": [
@@ -15,17 +13,12 @@
       "dest": "/public/build/$1"
     },
     {
-      "src": "/storage/(.*)",
-      "dest": "/public/storage/$1"
+      "src": "/(.*\\.(?:css|js|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot))$",
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
       "dest": "/api/bootstrap.php"
     }
-  ],
-  "env": {
-    "APP_ENV": "production",
-    "LOG_CHANNEL": "stderr",
-    "VERCEL": "true"
-  }
+  ]
 }
